@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<title>ปริมาณน้ำฝน</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<!-- <link rel="stylesheet" href="css/css-1.css" type="text/css"> -->
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  body { margin: auto; padding: auto; }
+	#map { position: absolute; top: 0; bottom: 0; width: 42%; z-index: -1;}
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+#menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 170px;
+        right: 15px;
+        /* border-radius: 10px; */
+        width: 270px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 0px solid rgba(0, 0, 0, 0.25);
+        text-align: left;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #F5F5F5;
+        color: #2393de;
+    }
+
+    #menu a.active {
+        background-color: #f8f8f8;
+        color: #2393de;
+    }
+
+    #menu a.active:hover {
+        background: #f8f8f8;
+    }
+    .legend2 {
+      background-color: #fff;
+      width: 40%;
+      height: 100%;
+      border-radius: 3px;
+      bottom: 10px;
+      /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); */
+      font: 4px/5px 'Open Sans', sans-serif;
+      padding: 10px;
+      position: absolute;
+      right: 0px;
+      top: 0px; 
+      bottom: 0;
+      z-index: 1;
+      }
+    .legend {
+      background-color: #fff;
+      border-radius: 3px;
+      bottom: 50px;
+      /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); */
+      font: 4px/5px 'Open Sans', sans-serif;
+      padding: 10px;
+      position: absolute;
+      right: 60px;
+      z-index: 1;
+      } 
+      .legend h4 {
+      margin: 0 0 10px;
+      }
+      
+      .legend div span {
+      border-radius: 50%;
+      display: inline-block;
+      height: 10px;
+      margin-right: 10px;
+      width: 10px;
+      }
+</style>
+<div id="state-legend" class="legend2">
+  <div class='tableauPlaceholder' id='viz1590257429282' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;__&#47;__2562_15899958494140&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='__2562_15899958494140&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;__&#47;__2562_15899958494140&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1590257429282');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.minWidth='420px';vizElement.style.maxWidth='650px';vizElement.style.width='100%';vizElement.style.height='947px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.minWidth='420px';vizElement.style.maxWidth='650px';vizElement.style.width='100%';vizElement.style.height='947px';} else { vizElement.style.width='100%';vizElement.style.height='1227px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+</div>
+<body class="w3-light-grey">
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right"><img src="https://raw.githubusercontent.com/sattawatarab/geojson/master/logo-3.png" class="w3-circle w3-margin-right" style="width:32px"></span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src="https://raw.githubusercontent.com/sattawatarab/geojson/master/logo-3.png" class="w3-circle w3-margin-right" style="width:46px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>ข้อมูล : <strong>พื้นที่เสี่ยงอุบัติเหตุจังหวัดภูเก็ต</strong></span><br>
+      <!-- <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a> -->
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>ข้อมูลอุบัติเหตุ</h5>
+  </div>
+  <div id="menu"></div>
+</div>
+  
+  <div id="state-legend" class="legend">
+    <h4 style="font-size:18px"> Powered by GIS Story</h4>
+    <h4 style="font-size:12px"> สนับสนุนเราได้ที่ : <a href="https://raw.githubusercontent.com/gis-story/gis-story/master/qr.JPG" target="_blank"><img src="https://raw.githubusercontent.com/sattawatarab/geojson/master/logo-3.png" class="w3-circle w3-margin-right" style="width:22px"></a></h4>
+  </div>
+</nav>
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<div id="map">
+<!-- <div class='tableauPlaceholder' id='viz1590254030200' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;__&#47;__2562_15899958494140&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='__2562_15899958494140&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;__&#47;__2562_15899958494140&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1590254030200');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.minWidth='420px';vizElement.style.maxWidth='650px';vizElement.style.width='100%';vizElement.style.minHeight='587px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.minWidth='420px';vizElement.style.maxWidth='650px';vizElement.style.width='100%';vizElement.style.minHeight='587px';vizElement.style.maxHeight='1000px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1177px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script> -->
+
+
+</div>
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'https://tile.i-bitz.co.th/styles/ibitz/style.json',
+        zoom: 5,
+        center: [100.50, 13.05]
+    });
+
+    map.on('load', function() {
+        // add source and layer for museums
+        map.addSource('rain', {
+            type: 'geojson',
+            data:
+                'https://raw.githubusercontent.com/gis-story/gis-story/master/rain-2019.geojson',
+            // cluster: true,
+            // clusterMaxZoom: 14, // Max zoom to cluster points on
+            // clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+        });
+
+        map.addLayer({
+            id: 'rain1',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(165, 42, 42, 0.3)",
+                "fill-antialias": false
+            },
+            'filter': ["all", ["<", "rain", 500]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain2',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(210, 105, 30, 0.3)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 500], ["<", "rain", 700]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain3',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(255, 165, 0, 0.3)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 700], ["<", "rain", 900]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain4',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(255, 215, 0, 0.3)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 900], ["<", "rain", 1100]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain5',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(152, 251, 152, 0.3)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 1100], ["<", "rain", 1300]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain6',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(0, 229, 238, 0.3)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 1300], ["<", "rain", 1500]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain7',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(99, 184, 255, 0.3)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 1500], ["<", "rain", 1700]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain8',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(30, 144, 255, 0.3)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 1700], ["<", "rain", 1900]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain9',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(0, 0, 255, 0.25)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 1900], ["<", "rain", 2100]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain10',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(0, 0, 205, 0.25)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 2100], ["<", "rain", 2300]],
+            
+        });
+
+        map.addLayer({
+            id: 'rain11',
+            type: 'fill',
+            source: 'rain',
+            'layout': {
+            'visibility': 'none'
+              },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(0, 0, 139, 0.25)",
+                "fill-antialias": false
+            },
+            'filter': ["all", [">=", "rain", 1300]],
+            
+        });
+
+      
+    });
+
+    
+
+    // enumerate ids of the layers
+
+    var toggleableLayerIds = [ 'rain1','rain2','rain3','rain4','rain5','rain6','rain7','rain8' ,'rain9' ,'rain10' ,'rain11'  ];
+
+    for (var i = 0; i < toggleableLayerIds.length; i++) {
+        var id = toggleableLayerIds[i];
+
+        var link = document.createElement('a'); 
+        link.href = '#';
+        link.className = '';
+        link.textContent = id;
+
+        link.onclick = function (e) {
+            var clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
+
+            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+            if (visibility === 'visible') {
+                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                this.className = '';
+            } else {
+                this.className = 'active';
+                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            }
+        };
+
+        var layers = document.getElementById('menu');
+        layers.appendChild(link);
+    }
+
+</script>
+
+</body>
+</html>
+
