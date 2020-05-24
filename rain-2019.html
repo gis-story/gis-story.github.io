@@ -110,7 +110,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       <img src="https://raw.githubusercontent.com/sattawatarab/geojson/master/logo-3.png" class="w3-circle w3-margin-right" style="width:46px">
     </div>
     <div class="w3-col s8 w3-bar">
-      <span>ข้อมูล : <strong>พื้นที่เสี่ยงอุบัติเหตุจังหวัดภูเก็ต</strong></span><br>
+      <span>ข้อมูล : <strong>ปริมาณน้ำฝน พ.ศ.2562</strong></span><br>
       <!-- <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a> -->
@@ -118,7 +118,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
   <hr>
   <div class="w3-container">
-    <h5>ข้อมูลอุบัติเหตุ</h5>
+    <h5>ปริมาณน้ำฝน</h5>
   </div>
   <div id="menu"></div>
 </div>
@@ -177,7 +177,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain1',
+            id: 'rain_<500_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -193,7 +193,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain2',
+            id: 'rain_500-700_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -209,7 +209,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain3',
+            id: 'rain_700-900_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -225,7 +225,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain4',
+            id: 'rain_900-1100_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -241,7 +241,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain5',
+            id: 'rain_1100-1300_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -257,7 +257,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain6',
+            id: 'rain_1300-1500_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -273,7 +273,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain7',
+            id: 'rain_1500-1700_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -289,7 +289,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain8',
+            id: 'rain_1700-1900_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -305,7 +305,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain9',
+            id: 'rain_1900-2100_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -321,7 +321,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain10',
+            id: 'rain_2100-2300_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -337,7 +337,7 @@ function w3_close() {
         });
 
         map.addLayer({
-            id: 'rain11',
+            id: 'rain_>2300_mm',
             type: 'fill',
             source: 'rain',
             'layout': {
@@ -348,8 +348,40 @@ function w3_close() {
                 "fill-color": "rgba(0, 0, 139, 0.25)",
                 "fill-antialias": false
             },
-            'filter': ["all", [">=", "rain", 1300]],
+            'filter': ["all", [">=", "rain", 2300]],
             
+        });
+
+        map.addLayer({
+            id: 'rain',
+            type: 'fill',
+            source: 'rain',
+            // 'layout': {
+            // 'visibility': 'none'
+            //   },
+            paint: {
+              // "fill-outline-color": "rgba(236, 231, 231, 1)",
+                "fill-color": "rgba(0, 0, 139, 0.0)",
+                "fill-antialias": false
+            },
+            
+        });
+
+        map.on('click', 'rain', function(e) {
+            new mapboxgl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML('<b>ปริมาณน้ำฝน : </b> ' +e.features[0].properties.rain +'<b> มม.</b>')
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the states layer.
+        map.on('mouseenter', 'rain', function() {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'states-layer', function() {
+            map.getCanvas().style.cursor = '';
         });
 
       
@@ -359,7 +391,7 @@ function w3_close() {
 
     // enumerate ids of the layers
 
-    var toggleableLayerIds = [ 'rain1','rain2','rain3','rain4','rain5','rain6','rain7','rain8' ,'rain9' ,'rain10' ,'rain11'  ];
+    var toggleableLayerIds = [ 'rain_<500_mm','rain_500-700_mm','rain_700-900_mm','rain_900-1100_mm','rain_1100-1300_mm','rain_1300-1500_mm','rain_1500-1700_mm','rain_1700-1900_mm' ,'rain_1900-2100_mm' ,'rain_2100-2300_mm' ,'rain_>2300_mm'  ];
 
     for (var i = 0; i < toggleableLayerIds.length; i++) {
         var id = toggleableLayerIds[i];
@@ -393,4 +425,3 @@ function w3_close() {
 
 </body>
 </html>
-
