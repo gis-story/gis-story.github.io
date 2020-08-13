@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Thailand Basemap</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css" rel="stylesheet"/>
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    #features {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 50%;
+        overflow: auto;
+        background: rgba(255, 255, 255, 0.8);
+    }
+    .legend {
+      background-color: #fff;
+      border-radius: 3px;
+      bottom: 50px;
+      /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); */
+      font: 4px/5px 'Open Sans', sans-serif;
+      padding: 10px;
+      position: absolute;
+      right: 60px;
+      z-index: 1;
+      }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<pre id="features"></pre>
+<div id="state-legend" class="legend">
+<h4 style="font-size:12px"> Powered by : <img src="https://raw.githubusercontent.com/sattawatarab/geojson/master/logo-3.png" class="w3-circle w3-margin-right" style="width:22px"></a></h4>
+<h4 style="font-size:12px"> Provided service by: <a href="https://osgeo.in.th/home/main" target="_blank"><img src="https://osgeo.in.th/static/media/logo2.9c0e860f.svg" class="w3-circle w3-margin-right" style="width:80px"></a></h4>
+<script>
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: load_style(),
+        center: [100.513916,13.742053],
+        zoom: 13 
+    });
+
+    function load_style() {
+            var style = 'https://raw.githubusercontent.com/gis-story/gis-story.github.io/master/thailand-basemap.json'
+            return style;
+    }
+
+    map.on('click', function(e) {
+            var features = map.queryRenderedFeatures(e.point);
+            
+            // Limit the number of properties we're displaying for
+            // legibility and performance
+            var displayProperties = [
+            'properties',
+            ];
+            
+            var displayFeatures = features.map(function(feat) {
+            var displayFeat = {};
+            displayProperties.forEach(function(prop) {
+            displayFeat[prop] = feat[prop];
+            });
+            return displayFeat;
+            });
+            
+            document.getElementById('features').innerHTML = JSON.stringify(
+            displayFeatures,
+            null,
+            2
+            );
+    });
+</script>
+ 
+</body>
+</html>
