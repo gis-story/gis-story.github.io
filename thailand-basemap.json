@@ -1,4 +1,4 @@
-var JSONstyle = {
+{
     "version": 8,
     "name": "ThaiLand_Basemap",
     "metadata": {"maputnik:renderer": "mbgljs"},
