@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="chart.js"></script>
+
+<head>
+  <style>
+    .grid-container {
+      display: grid;
+      grid-gap: 10px 10px;
+      grid-template-columns: auto auto auto;
+      padding: 10px;
+    }
+
+    .grid-item {
+      border: 1px solid rgba(0, 0, 0, 0.);
+      padding: 10px;
+      font-size: 60px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>The grid-gap Property:</h1>
+
+  <div class="grid-container">
+    <div class="grid-item" id="piechart1"></div>
+    <div class="grid-item" id="piechart2"></div>
+    <div class="grid-item" id="piechart3"></div>
+    <div class="grid-item" id="piechart4"></div>
+    <div class="grid-item" id="piechart5"></div>
+    <div class="grid-item" id="piechart6"></div>
+  </div>
+
+  <p id="demo"></p>
+
+  <p>Use the <em>grid-gap</em> property to adjust the space between the columns <em>and</em> the rows.</p>
+
+  <script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var data = google.visualization.arrayToDataTable(chart_a);
+
+      var options = {
+        title: 'My Daily Activities',
+        width: 500,
+        height: 350,
+        // colors: ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6']
+      };
+
+      var chart1 = new google.visualization.PieChart(document.getElementById('piechart1'));
+      chart1.draw(data, options);
+
+      var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
+      chart2.draw(data, options);
+
+      var chart3 = new google.visualization.PieChart(document.getElementById('piechart3'));
+      chart3.draw(data, options);
+
+      var chart4 = new google.visualization.PieChart(document.getElementById('piechart4'));
+      chart4.draw(data, options);
+
+      var chart5 = new google.visualization.PieChart(document.getElementById('piechart5'));
+      chart5.draw(data, options);
+
+      var chart6 = new google.visualization.PieChart(document.getElementById('piechart6'));
+      chart6.draw(data, options);
+    }
+
+  </script>
+
+
+</body>
+
+</html>
