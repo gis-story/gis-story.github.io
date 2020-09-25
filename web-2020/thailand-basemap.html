@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Thailand Basemap</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="style.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 70%;
+            right: 0px;
+        }
+
+        #map2 {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 70%;
+            right: 0px;
+        }
+    </style>
+</head>
+<form>
+    Select layer name:
+    <select id="mySelect">
+        <option value="Amphoe_Project_Area">Amphoe</option>
+        <option value="Landuse_2018June2130_61Nov22">landuse</option>
+        <option value="School_point">School</option>
+        <option value="EcologyForest">Ecology Forest</option>
+    </select>
+</form>
+
+<p>Click the button to return the value of the selected layer.</p>
+
+<button id="myBtn" type="button" onclick="myFunction() , myFunction4()">ค้นหา</button>
+<!-- <input type="button" value="Click me" onclick="msg() ; myFunction2() ; myFunction3()"> -->
+
+<button id="myBtn1" type="button" value="Click me" onclick="msg() ; myFunction2() ; myFunction3() ; myFunction5()" >แสดงแผนที่</button>
+<!-- <button onclick="myFunction2()">Remove paragraph</button> -->
+
+<button type="button" value="refresh" onclick="history.go(0)" > ค้นหาใหม่ </button>
+
+<p id="demo"></p>
+<p id="demo2"></p>
+
+<body>
+    <div id="map"></div>
+    <div id="map2"></div>
+    <pre id="features"></pre>
+    <script>
+        url = 'https://swampforestmap.i-bitz.co.th/geoserver/Swamp/wms?&bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=';
+        function myFunction() {
+            x = document.getElementById("mySelect").value;
+            document.getElementById("demo").innerHTML = x;
+            return x;
+        }
+        //     function msg() {
+
+        //         alert(x);
+        // }
+
+        var map = new mapboxgl.Map({
+
+            container: 'map2',
+            style: JSONstyle,
+
+            center: [99.342322, 7.972476],
+            zoom: 7
+
+        });
+        map.addControl(new mapboxgl.NavigationControl());
+
+
+        function msg() {
+            alert(x);
+            var map = new mapboxgl.Map({
+
+                container: 'map',
+                style: JSONstyle,
+
+                center: [99.342322, 7.972476],
+                zoom: 7
+
+            });
+
+
+            map.addControl(new mapboxgl.NavigationControl());
+
+            map.on('load', function () {
+                map.addSource('wms-test-source', {
+
+                    'type': 'raster',
+                    'tiles': [
+                        url + x
+                    ],
+                    'tileSize': 256
+                });
+                map.addLayer(
+                    {
+                        'id': 'wms-test-layer',
+                        'type': 'raster',
+                        'source': 'wms-test-source',
+                        'paint': {}
+                    }
+                );
+
+            }
+            );
+        }
+
+        function myFunction2() {
+            var myobj = document.getElementById("map2");
+            myobj.remove();
+        }
+
+        function myFunction3() {
+            var myobj = document.getElementById("mySelect");
+            myobj.remove();
+        }
+
+        function myFunction4() {
+            document.getElementById("myBtn").disabled = true;
+        }
+
+        function myFunction5() {
+            document.getElementById("myBtn1").disabled = true;
+        }
+
+
+    </script>
+</body>
+
+</html>
