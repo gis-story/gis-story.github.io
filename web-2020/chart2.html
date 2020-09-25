@@ -40,6 +40,20 @@
   <p>Use the <em>grid-gap</em> property to adjust the space between the columns <em>and</em> the rows.</p>
 
   <script type="text/javascript">
+
+    var t;
+
+    jQuery.get('test.txt', function (data) {
+      console.log(data)
+
+      t = data;
+    document.getElementById("demo").innerHTML = t;
+
+    return t ;
+
+    }, 'text');
+
+
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
 
