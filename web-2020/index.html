@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Accident</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src="style.js"></script>
+    <script src="layer-map.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="myFunction7() , myLink2()">
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <form>
+            <p> Select layer name : <select id="mySelect">
+                    <option value="Accident_TH830201_2017">อุบัติเหตุ พ.ศ.2560</option>
+                    <option value="Accident_TH830201_2018">อุบัติเหตุ พ.ศ.2561</option>
+                    <option value="Accident_TH830201_2019">อุบัติเหตุ พ.ศ.2562</option>
+                    <option value="Accident_TH830201_2020">อุบัติเหตุ พ.ศ.2563</option>
+                </select>
+                <br><br>
+                Date: <input style="font-size:11px" type="text" id="mySelect2" name="text" placeholder="dd/mm/yyyy">
+        </form>
+        </p>
+        <br>
+        <div class="buttons2"> <button class="button2" role="button2" id="myBtn" type="button"
+                onclick="myFunction() , myFunction4(), myFunction8()">ค้นหา</button> <button class="button2"
+                role="button2" id="myBtn1" type="button" value="Click me"
+                onclick="msg() , myFunction2() , myFunction3() , myFunction5(), myLink3()">แสดงแผนที่</button>
+            <button class="button2" role="button2" type="button" value="refresh" onclick="history.go(0)"> ค้นหาใหม่
+            </button> <button class="button2" role="button2" id="myBtn2" type="button"
+                onclick="myFunction6()">Excel</button> <button class="button2" role="button2" id="myBtn5" type="button"
+                onclick="myLink()">SHP</button> </div>
+        <p>
+        <table style="text-align:center ;font-size:12px" class="b" id="myTable">
+        </table> <br></p>
+    </div>
+    <div class="alert">
+        <div style="text-align:center" id="demo"> </div>
+    </div>
+
+    <div id="mySidebar2" class="sidebar2">
+        <a href="javascript:void(0)" class="closebtn2" onclick="closeNav2()">×</a>
+        <p style="text-align:center ; color:#2393de"> map service </p>
+        <nav id="menu"></nav>
+    </div>
+
+    <div id="mySidebar3" class="sidebar3">
+        <a href="javascript:void(0)" class="closebtn3" onclick="closeNav3()">×</a>
+        <p style="font-size:16px ; color:#2393de">คำอธิบายสัญลักษณ์ </br>
+        <h4 style="font-size:12px ; color:#0c0c0c">ตำแหน่งอุบัติเหตุ</br><img
+                src="https://kathumap.i-bitz.co.th/geoserver/KathuMap/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=30&HEIGHT=30&Style=point2&LAYER=Accident_TH830201_2017"
+                style="width:40px"></h4>
+        <h4 style="font-size:12px ; color:#0c0c0c">ความหนาแน่นอุบัติเหตุ</br><img
+                src="https://kathumap.i-bitz.co.th/geoserver/KathuMap/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=30&HEIGHT=30&LAYER=Hexagon_TH830201_2017"
+                style="width:60px"></h4>
+        </p>
+    </div>
+
+    <div id="main">
+        <button class="openbtn button4" onclick="openNav()"><i class="fa fa-search" style="font-size:20px"></i></button>
+    </div>
+    <div id="main2">
+        <button class="openbtn2 button4" onclick="openNav2()"><i class="material-icons"
+                style="font-size:18px">layers</i></button>
+    </div>
+    <div id="main3">
+        <button class="openbtn3 button4" onclick="openNav3()" ><i class='fas fa-info' style='font-size:18px'></i></button>
+    </div>
+
+    <div>
+        <button class="openbtn4 button4"><img
+            src="https://raw.githubusercontent.com/gis-story/gis-story/master/logo-3.png"
+            style="width:40px"></button>
+    </div>
+
+
+
+
+    <div id="print">
+        <!-- <a id="downloadLink" href="" download="map.png">Download ↓</a> -->
+        <p>
+            <a id="downloadLink2" href="" download="map.png"><button id="myBtn4" type="button" class="button button4"
+                    style="font-size:10px"><i class="fa fa-download"></i></button></a>
+        </p>
+    </div>
+
+    <div id="map"></div>
+    <div id="map2"></div>
+
+
+    <script>
+        url = 'https://kathumap.i-bitz.co.th/geoserver/KathuMap/wms?&bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&Styles=point2&layers=';
+        url2 = 'https://kathumap.i-bitz.co.th/geoserver/KathuMap/wms?&bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=';
+        url3 = 'https://kathumap.i-bitz.co.th/geoserver/KathuMap/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=SHAPE-ZIP&format_options=CHARSET:UTF-8&typeName=KathuMap%3A';
+        function myFunction() {
+            x = document.getElementById("mySelect").value;
+            y = document.getElementById("mySelect2").value;
+            yy = '&CQL_FILTER=accdate%20LIKE%20%27%25' + y + '%25%27'
+            $.getJSON('https://kathumap.i-bitz.co.th/geoserver/KathuMap/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&typeName=KathuMap%3A' + x + yy, function (data) {
+                for (var i = 0; i < data.features.length; i++) {
+
+                    var text = `${'<tr><td>' + data.features[i].properties.accdate + '</td><td>'
+                        + data.features[i].properties.accplace + '</td><td>'
+                        // + data.features[i].properties.PROV_NAM_T + '</td><td>'
+                        + data.features[i].properties.accnature + '</td></tr>'}`
+                    $('#myTable').append(text);
+                }
+                bb = data.features.length
+                // alert('ผลการค้นหา : ' + bb + ' ข้อมูล');
+                document.getElementById("demo").innerHTML = 'ผลการค้นหา : ' + bb + ' รายการ'
+            });
+            return x;
+            return yy;
+        }
+
+        function myLink() {
+            window.open(url3 + x + yy);
+        }
+        var map2 = new mapboxgl.Map(map2);
+        $('#downloadLink2').click(function () {
+            var img = map2.getCanvas().toDataURL('image/png')
+            this.href = img
+        })
+        map2.addControl(new mapboxgl.NavigationControl());
+
+
+        function msg() {
+            // alert(x);
+            var map = new mapboxgl.Map(map1);
+
+            map.addControl(new mapboxgl.NavigationControl());
+
+            map.on('load', function () {
+                map.addSource('wms-test-source', {
+
+                    'type': 'raster',
+                    'tiles': [
+                        url + x + yy
+                    ],
+                    'tileSize': 256
+                });
+                map.addLayer(
+                    {
+                        'id': 'ผลการค้นหา',
+                        'type': 'raster',
+                        'source': 'wms-test-source',
+                        'paint': {}
+                    }
+                );
+                map.addSource('wms-2017', layers1);
+                map.addLayer(style1);
+
+                map.addSource('wms-2018', layers2);
+                map.addLayer(style2);
+
+                map.addSource('wms-2019', layers3);
+                map.addLayer(style3);
+
+                map.addSource('wms-2020', layers4);
+                map.addLayer(style4);
+
+            }
+
+            );
+            preserveDrawingBuffer: true;
+            $('#downloadLink2').click(function () {
+                var img = map.getCanvas().toDataURL('image/png')
+                this.href = img
+            })
+
+            // enumerate ids of the layers
+            var toggleableLayerIds = ['ผลการค้นหา', 'อุบัติเหตุ-พ.ศ.2560', 'อุบัติเหตุ-พ.ศ.2561', 'อุบัติเหตุ-พ.ศ.2562', 'อุบัติเหตุ-พ.ศ.2563'];
+
+            // set up the corresponding toggle button for each layer
+            for (var i = 0; i < toggleableLayerIds.length; i++) {
+                var id = toggleableLayerIds[i];
+
+                var link = document.createElement('a');
+                link.href = '#';
+                link.className = '';
+                link.textContent = id;
+
+                link.onclick = function (e) {
+                    var clickedLayer = this.textContent;
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                    // toggle layer visibility by changing the layout object's visibility property
+                    if (visibility === 'visible') {
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                        this.className = '';
+                    } else {
+                        this.className = 'active';
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    }
+                };
+
+                var layers = document.getElementById('menu');
+                layers.appendChild(link);
+            }
+
+        }
+
+        function myFunction2() {
+            var myobj = document.getElementById("map2");
+            myobj.remove();
+        };
+
+        function myFunction3() {
+            var myobj = document.getElementById("mySelect");
+            myobj.remove();
+        };
+
+        function myFunction4() {
+            document.getElementById("myBtn").disabled = true;
+        };
+
+        function myFunction5() {
+            document.getElementById("myBtn1").disabled = true;
+        };
+
+        function myFunction6() {
+            $(document).ready(function () {
+                $("#myTable").table2excel({
+                    filename: "Accident.xls"
+                });
+            });
+
+        };
+        function myFunction7() {
+            document.getElementById("myBtn2").disabled = true;
+        };
+
+        function myFunction8() {
+            document.getElementById("myBtn2").disabled = false;
+        };
+
+
+        function myLink2() {
+            document.getElementById("myBtn5").disabled = true;
+        };
+
+        function myLink3() {
+            document.getElementById("myBtn5").disabled = false;
+        };
+
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "400px";
+            document.getElementById("main").style.marginLeft = "0px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+
+        function openNav2() {
+            document.getElementById("mySidebar2").style.width = "400px";
+            document.getElementById("main2").style.marginLeft = "0px";
+        }
+
+        function closeNav2() {
+            document.getElementById("mySidebar2").style.width = "0";
+            document.getElementById("main2").style.marginLeft = "0";
+        }
+
+        function openNav3() {
+            document.getElementById("mySidebar3").style.width = "200px";
+            document.getElementById("main3").style.marginLeft = "0px";
+        }
+
+        function closeNav3() {
+            document.getElementById("mySidebar3").style.width = "0";
+            document.getElementById("main3").style.marginLeft = "0";
+        }
+
+    </script>
+</body>
+
+</html>
