@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Thailand Basemap</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="style.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            z-index: -1;
+        }
+
+        #menu {
+            background: #fff;
+            position: absolute;
+            z-index: 1;
+            top: 10px;
+            right: 10px;
+            border-radius: 3px;
+            width: 120px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #menu a {
+            font-size: 13px;
+            color: #404040;
+            display: block;
+            margin: 0;
+            padding: 0;
+            padding: 10px;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        #menu a:last-child {
+            border: none;
+        }
+
+        #menu a:hover {
+            background-color: #f8f8f8;
+            color: #404040;
+        }
+
+        #menu a.active {
+            background-color: #3887be;
+            color: #ffffff;
+        }
+
+        #menu a.active:hover {
+            background: #3074a4;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <nav id="menu"></nav>
+    <div class="container">
+        <br/>
+        <!-- Trigger the modal with a button -->
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">จุดความร้อน</button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">คำอธิบาย</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>ข้อมูล จุดความร้อนจากดาวเทียม Suomi-NPP <br>
+                            อ้างอิงจาก: <a href="https://firms.modaps.eosdis.nasa.gov/active_fire/#firms-shapefile">EARTHDATA</a>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <script>
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: JSONstyle,
+
+            center: [100.513916, 13.742053],
+            zoom: 5
+        });
+
+        map.on('load', function () {
+
+            map.addSource('density-point', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/sivabhornk60/fire_data/main/SUOMI_VIIRS_C2_SouthEast_Asia_7d.geojson'
+            });
+            map.addLayer({
+                id: 'density',
+                type: 'heatmap',
+                source: 'density-point',
+                minzoom: 4,
+                maxzoom: 14,
+                layout: {
+                    'visibility': 'none'
+                },
+                paint: {
+                    // increase weight as diameter breast height increases
+                    'heatmap-weight': {
+                        property: '',
+                        type: 'exponential',
+                        stops: [
+                            [1, 0],
+                            [62, 1]
+                        ]
+                    },
+                    // increase intensity as zoom level increases
+                    'heatmap-intensity': {
+                        stops: [
+                            [11, 1],
+                            [19, 3]
+                        ]
+                    },
+                    // assign color values be applied to points depending on their density
+                    'heatmap-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['heatmap-density'],
+                        0,
+                        'rgba(33,102,172,0)',
+                        0.2,
+                        'rgba(103,169,207,0.3)',
+                        0.4,
+                        'rgba(209,229,240,0.3)',
+                        0.6,
+                        'rgba(253,219,199,0.3)',
+                        0.8,
+                        'rgba(239,138,98,0.3)',
+                        1,
+                        'rgba(178,24,43,0.3)'
+                    ],
+                    // increase radius as zoom increases
+                    'heatmap-radius': {
+                        stops: [
+                            [8, 15],
+                            [15, 20]
+                        ]
+                    },
+                    // decrease opacity to transition into the circle layer
+                    'heatmap-opacity': {
+                        default: 1,
+                        stops: [
+                            [14, 1],
+                            [18, 0]
+                        ]
+                    },
+                }
+            });
+
+            map.addLayer({
+                'id': 'points',
+                'type': 'circle',
+                source: 'density-point',
+                minzoom: 14,
+                maxzoom: 24,
+                layout: {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'circle-radius': 8,
+                    'circle-color': '#FF0000'
+                },
+                'filter': ['==', '$type', 'Point']
+            });
+
+            map.on('click', 'points', function (e) {
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(
+                        '<b>วันที่ : </b> ' + e.features[0].properties.ACQ_DATE + '<br/>' +
+                        '<b>ช่วงเวลา : </b> ' + e.features[0].properties.DAYNIGHT + '<br/>' +
+                        '<b>เวลา : </b> ' + e.features[0].properties.ACQ_TIME + '<br/>' +
+                        '<b>ความสว่าง : </b> ' + e.features[0].properties.BRIGHT_TI4
+                    )
+                    .addTo(map);
+            });
+
+            // Change the cursor to a pointer when the mouse is over the states layer.
+            map.on('mouseenter', 'points', function () {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            map.on('mouseleave', 'points', function () {
+                map.getCanvas().style.cursor = '';
+            });
+
+            // enumerate ids of the layers
+            var toggleableLayerIds = ['density', 'points'];
+
+            for (var i = 0; i < toggleableLayerIds.length; i++) {
+                var id = toggleableLayerIds[i];
+
+                var link = document.createElement('a');
+                link.href = '#';
+                link.className = '';
+                link.textContent = id;
+
+                link.onclick = function (e) {
+                    var clickedLayer = this.textContent;
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                    if (visibility === 'visible') {
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                        this.className = '';
+                    } else {
+                        this.className = 'active';
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    }
+                };
+
+                var layers = document.getElementById('menu');
+                layers.appendChild(link);
+            }
+
+
+        });
+    </script>
+
+</body>
+
+</html>
